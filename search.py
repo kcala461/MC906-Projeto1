@@ -8,6 +8,8 @@ functions.
 
 import sys
 from collections import deque
+import numpy as np
+import math
 
 from utils import *
 
@@ -643,7 +645,13 @@ def hill_climbing(problem):
         neighbors = current.expand(problem)
         if not neighbors:
             break
-        neighbor = argmax_random_tie(neighbors, key=lambda node: problem.value(node.state))
+        
+        maxValue = max(neighbors, key=lambda node: problem.value(node.state))
+        print(maxValue)
+        return
+        #maxNeighbors = {neighbor for neighbor in neighbors if problem.value(neighbor.state)}
+
+        #neighbor = np.random.choice(neighbors, key=lambda node: problem.value(node.state))
         if problem.value(neighbor.state) <= problem.value(current.state):
             break
         current = neighbor
