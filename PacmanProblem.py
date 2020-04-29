@@ -2,7 +2,10 @@ import readMaze as rM
 from search import Node, Problem
 import math
 import functools
-
+from search import Node
+from best_first_graph_search_for_vis import best_first_graph_search_for_vis, astar_search_graph
+from notebook import show_map, display_visual
+from search import UndirectedGraph
 
 class PacmanProblem(Problem):
     def __init__(self, initial, goal, maze=None):
@@ -42,26 +45,17 @@ class PacmanProblem(Problem):
         
         return adjacent
 
-    # returns the possible child states for the given state
+     # returns the possible child states for the given state
     def actions(self, state):
-        if len(state) == 0:
-            return []
-
-        states = []
-        adjacent = self.adjacent(state[-1])
-        for position in adjacent:
-            stateCopy = state.copy()
-            states.append(stateCopy.append(position))
-        
-        return states
+        return self.adjacent(state)
 
     # the goal is reached if all positions that are reachable through the initial state are in the solution 
     # and the first and last positions in the solution are the initial position and goal position
-    def goal_test(self, state):
-        return all(position in state for position in set(self.positionsInSolution)) and state[-1] == self.goal and state[0] == self.initial
+    def goal_test(self, states):
+        return states[-1] == self.goal and states[0] == self.initial
     
     def result(self, state, action):
-        pass
+        return action
     
     def path_cost(self, c, position1, action, position2):
         # Se as posicoes n forem adjacentes entao nao ha um caminho direto de pos1 pra pos2
@@ -98,17 +92,54 @@ class PacmanProblem(Problem):
 
 
     # Cada posicao andada custa 1, porem cada ponto unico recolhido vale 2
-    def value(self, state):
-        return -1 * len(state) + 2 * len(set(state))
+    def value(self, states):
+        return -1 * len(states) + 2 * len(set(states))
+
+    def h(self, node):
+        return self.distance(node.state, self.goal)
+
+    def g(self, node):
+        return node.path_cost
 
     # Calcula a distancia entre duas posicoes, valido apenas para posicoes que fazem parte da sol
     @functools.lru_cache(maxsize=4096)
-    def distance(self, position1, position2, returnPath=False, lim=100000):
+    def distance(self, position1, position2, lim=100000):
         if position1 == position2:
-            if returnPath:
-                return 0, [position1]
-            else:
-                return 0
+            return 0
+
+        # dicicionario com formato { item: [distancia, visitado (0 = nao, 1 = sim)], ... }
+        d = dict.fromkeys(self.reachable_positions(position1), [math.inf, 0])
+        d[position1] = [0, 0]
+
+        i = 0
+        while min({l[1] for l in d.values()}) == 0 and i < lim:
+            m = math.inf
+            current = None
+            for k, v in d.items():
+                if v[1] == 0 and v[0] < m:
+                    current = k
+                    m = v[0]
+
+            d[current] = [m, 1]
+
+            neighbors = self.adjacent(current)
+            for neighbor in neighbors:
+                if d[neighbor][1] == 0 and m+1 < d[neighbor][0]:
+                    d[neighbor] = [m+1, 0]
+                    if neighbor == position2:
+                        return m+1
+
+            current = None
+            i = i+1
+
+        try:
+            return d[position2][0]
+        except KeyError:
+            return math.inf
+
+    def path(self, position1, position2, lim=100000):
+        if position1 == position2:
+            return 0, [position1]
 
         # dicicionario com formato { item: [distancia, visitado (0 = nao, 1 = sim)], ... }
         d = dict.fromkeys(self.reachable_positions(position1), [math.inf, 0, []])
@@ -134,18 +165,65 @@ class PacmanProblem(Problem):
                     pathCopy.append(neighbor)
                     d[neighbor] = [m+1, 0, pathCopy]
                     if neighbor == position2:
-                        return m+1, pathCopy
+                        return pathCopy
 
             current = None
             i = i+1
 
         try:
-            if returnPath:
-                return d[position2][0], pathCopy
-            else:
-                return d[position2][0]
-        except KeyError:
-            if returnPath:
-                return math.inf, []
-            else:
-                return math.inf
+            pathCopy
+        except:
+            return []
+
+
+pacman_problem = PacmanProblem((1,1), (8,11))
+
+reachable = pacman_problem.reachable_positions(pacman_problem.initial)
+
+graph = dict()
+aux = {}
+i = 0
+for position in reachable:
+    aux[i] = position
+    i = i + 1
+
+i = 0
+for item in aux.values():
+    keys = []
+    for position in pacman_problem.adjacent(aux[i]):
+        for ki, vi in aux.items():
+            if position == vi:
+                keys.append(ki)
+                break
+    graph[i] = dict.fromkeys(keys, 1)
+    i = i + 1
+
+pacman_map = UndirectedGraph(graph)
+
+pacman_map.locations = aux
+
+node_colors = {node: 'white' for node in pacman_map.locations.keys()}
+node_positions = pacman_map.locations
+node_label_pos = { k:[v[0]-0.25, v[1]-0.4] for k,v in pacman_map.locations.items() }
+edge_weights = { (k,k2) : 1 for k,v in pacman_map.graph_dict.items() for k2,v2 in v.items()}
+
+iterations, all_node_colors, node = astar_search_graph(pacman_problem)
+
+result_node_colors = all_node_colors[-1]
+
+node_colors = {}
+for k,v in result_node_colors.items():
+    for ki, vi in aux.items():
+        if aux[ki] == k:
+            node_colors[ki] = v
+            break
+
+pacman_graph_data = {
+    'graph_dict': pacman_map.graph_dict,
+    'node_colors': node_colors,
+    'node_positions': node_positions,
+    'node_label_positions': node_label_pos,
+    'edge_weights': edge_weights
+}
+
+show_map(pacman_graph_data)
