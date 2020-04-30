@@ -1,3 +1,5 @@
+
+
 from search import Node
 
 class PriorityQueue:
@@ -103,5 +105,38 @@ def astar_search_graph(problem, h=None , g=None):
     iterations, all_node_colors, node = best_first_graph_search_for_vis(problem, 
                                                                 lambda n: g(n) + h(n))
     return(iterations, all_node_colors, node)
+
+
+
+def greedy_best_first_search(problem, h=None):
+    """Greedy Best-first graph search is an informative searching algorithm with f(n) = h(n).
+    You need to specify the h function when you call best_first_search, or
+    else in your Problem subclass."""
+    if h == None:
+        h = problem.h
+    iterations, all_node_colors, node = best_first_graph_search_for_vis(problem, lambda n: h(n))
+    return(iterations, all_node_colors, node)
+
+def uniform_cost_search(problem, display=False):
+    iterations, all_node_colors, node = best_first_graph_search_for_vis(problem, lambda node: node.path_cost)
+    return(iterations, all_node_colors, node)
+
+# def hill_climbing(problem):
+#     """From the initial node, keep choosing the neighbor with highest value,
+#     stopping when no neighbor is better. [Figure 4.2]"""
+#     current = Node(problem.initial)
+#     while True:
+#         neighbors = current.expand(problem)
+#         if not neighbors:
+#             break
+#         neighbor = argmax_random_tie(neighbors,
+#                                      key=lambda node: problem.value(node.state))
+#         if problem.value(neighbor.state) <= problem.value(current.state):
+#             break
+#         current = neighbor
+#     return current.state
+
+
+
 
         
