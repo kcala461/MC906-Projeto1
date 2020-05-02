@@ -1,15 +1,17 @@
+from IPython.core.display import display
+from ipywidgets import widgets
+
 import readMaze as rM
-from search import Node, Problem
+from Problem import Problem, UndirectedGraph, show_map
 import math
 import functools
-from search import Node
-from tree_breadth_search_for_vis import breadth_first_tree_search, depth_first_tree_search
-from best_first_graph_search_for_vis import best_first_graph_search_for_vis, astar_search_graph, greedy_best_first_search, uniform_cost_search, recursive_best_first_search_for_vis
-from notebook import show_map, display_visual
-from search import UndirectedGraph
+from uninformed_search import breadth_first_search, depth_first_search
+from informed_search import astar_search_graph, greedy_best_first_search, uniform_cost_search, recursive_best_first_search
+from notebook import display_visual
 import time as time
 
 
+# ---------------------------------- PROBLEM DEFINITION -----------------------------------------------------
 class PacmanProblem(Problem):
     def __init__(self, initial, goal, maze=None):
         self.initial = initial
@@ -177,8 +179,8 @@ class PacmanProblem(Problem):
         except:
             return []
 
-
-# best_first_graph_search_for_vis(PacmanProblem((1,1), (8,11), lambda node : node.path_cost))
+# ---------------------------------- PROBLEM INITIALIZATION -----------------------------------------------------
+# graph constuction defining the possible states + variable set for executing search algorithms
 
 pacman_problem = PacmanProblem((1, 1), (2, 6))
 
@@ -214,51 +216,53 @@ edge_weights = {(k, k2): 1 for k, v in pacman_map.graph_dict.items() for k2, v2 
 # ---------------------------------- METHOD CALLS -----------------------------------------------------
 # ----------------------------------      A*      -----------------------------------------------------
 
-# start = time.time()
-# iterations, all_node_colors, node = astar_search_graph(pacman_problem)
-# end = time.time()
-# print("time elapsed for astar_search_graph = "+ str(end - start) + 's')
-# print("iterations = "+ str(iterations))
+start = time.time()
+iterations, all_node_colors, node = astar_search_graph(pacman_problem)
+end = time.time()
+print("time elapsed for astar_search_graph = "+ str(end - start) + 's')
+print("iterations = "+ str(iterations))
 
 # ----------------------------------  GREEDY_BEST_FIRST ------------------------------------------------
 
-# start = time.time()
-# iterations, all_node_colors, node = greedy_best_first_search(pacman_problem)
-# end = time.time()
-# print("time elapsed for greedy_best_first_search = " + str(end - start) + 's')
-# print("iterations = " + str(iterations))
+start = time.time()
+iterations, all_node_colors, node = greedy_best_first_search(pacman_problem)
+end = time.time()
+print("time elapsed for greedy_best_first_search = " + str(end - start) + 's')
+print("iterations = " + str(iterations))
 
 # ----------------------------------  UNIFORM_COST  -----------------------------------------------------
 
-# start = time.time()
-# iterations, all_node_colors, node = uniform_cost_search(pacman_problem)
-# end = time.time()
-# print("time elapsed for uniform_cost_search = "+ str(end - start) + 's')
-# print("iterations = "+ str(iterations))
+start = time.time()
+iterations, all_node_colors, node = uniform_cost_search(pacman_problem)
+end = time.time()
+print("time elapsed for uniform_cost_search = " + str(end - start) + 's')
+print("iterations = " + str(iterations))
 
 # ----------------------------------  BREADTH_FIRST  ----------------------------------------------------------
 
-# start = time.time()
-# iterations, all_node_colors, node = breadth_first_tree_search(pacman_problem)
-# end = time.time()
-# print("time elapsed for breadth_first_tree_search = "+ str(end - start) + 's')
-# print("iterations = "+ str(iterations))
+start = time.time()
+iterations, all_node_colors, node = breadth_first_search(pacman_problem)
+end = time.time()
+print("time elapsed for breadth_first_search = " + str(end - start) + 's')
+print("iterations = " + str(iterations))
 
 # ----------------------------------  RECURSIVE_BEST_FIRST  ------------------------------------------------
 
-# start = time.time()
-# iterations, all_node_colors, node = recursive_best_first_search_for_vis(pacman_problem)
-# end = time.time()
-# print("time elapsed for recursive_best_first_search_for_vis = "+ str(end - start) + 's')
-# print("iterations = "+ str(iterations))
+start = time.time()
+iterations, all_node_colors, node = recursive_best_first_search(pacman_problem)
+end = time.time()
+print("time elapsed for recursive_best_first_search = " + str(end - start) + 's')
+print("iterations = " + str(iterations))
 
 # ----------------------------------  DEPTH_FIRST  ----------------------------------------------------------
 
-start = time.time()
-iterations, all_node_colors, node = depth_first_tree_search(pacman_problem)
-end = time.time()
-print("time elapsed for depth_first_tree_search = "+ str(end - start) + 's')
-print("iterations = "+ str(iterations))
+# start = time.time()
+# iterations, all_node_colors, node = depth_first_search(pacman_problem)
+# end = time.time()
+# print("time elapsed for depth_first_tree_search = " + str(end - start) + 's')
+# print("iterations = " + str(iterations))
+
+# ----------------------------------  VISUAL_DISPLAY  ----------------------------------------------------------
 
 result_node_colors = all_node_colors[-1]
 
@@ -277,7 +281,6 @@ pacman_graph_data = {
     'edge_weights': edge_weights
 }
 
-show_map(pacman_graph_data)
+# show_map(pacman_graph_data)
 
-# breadth_first_tree_search(PacmanProblem((1, 1), (8, 11)))
 # display_visual(pacman_graph_data, True, best_first_graph_search_for_vis, PacmanProblem((1,1), (8,11)))
