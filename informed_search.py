@@ -150,11 +150,11 @@ def best_first_graph_search_for_vis(problem, f):
     iterations += 1
     all_node_colors.append(dict(node_colors))
 
-    if problem.goal_test([node.state for node in node.path()]):
-        node_colors[node.state] = "green"
-        iterations += 1
-        all_node_colors.append(dict(node_colors))
-        return iterations, all_node_colors, node
+    # if problem.goal_test([node.state for node in node.path()]):
+    #     node_colors[node.state] = "green"
+    #     iterations += 1
+    #     all_node_colors.append(dict(node_colors))
+    #     return iterations, all_node_colors, node
 
     frontier = PriorityQueue()
     frontier.append(node, f(node))
@@ -178,6 +178,7 @@ def best_first_graph_search_for_vis(problem, f):
 
             for item in node.path():
                 node_colors[item.state] = "green"
+                node_colors[problem.initial] = "red"
 
             iterations += 1
             all_node_colors.append(dict(node_colors))
