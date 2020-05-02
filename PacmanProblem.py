@@ -3,10 +3,11 @@ from search import Node, Problem
 import math
 import functools
 from search import Node
-from tree_breadth_search_for_vis import breadth_first_tree_search, depth_first_tree_search
+from tree_breadth_search_for_vis import breadth_first_tree_search
 from best_first_graph_search_for_vis import best_first_graph_search_for_vis, astar_search_graph, greedy_best_first_search, uniform_cost_search, recursive_best_first_search_for_vis
 from notebook import show_map, display_visual
 from search import UndirectedGraph
+from dfs_for_vis import depth_first_tree_search, depth_first_graph_search
 import time as time
 
 
@@ -245,9 +246,9 @@ edge_weights = {(k, k2): 1 for k, v in pacman_map.graph_dict.items() for k2, v2 
 # ----------------------------------  DEPTH_FIRST  ----------------------------------------------------------
 
 start = time.time()
-iterations, all_node_colors, node = depth_first_tree_search(pacman_problem)
+iterations, all_node_colors, node = depth_first_graph_search(pacman_problem)
 end = time.time()
-print("time elapsed for depth_first_tree_search = "+ str(end - start) + 's')
+print("time elapsed for depth_first_graph_search = "+ str(end - start) + 's')
 print("iterations = "+ str(iterations))
 
 result_node_colors = all_node_colors[-1]
