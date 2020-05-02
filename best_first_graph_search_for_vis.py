@@ -45,12 +45,6 @@ def best_first_graph_search_for_vis(problem, f):
     iterations += 1
     all_node_colors.append(dict(node_colors))
     
-    if problem.goal_test([node.state for node in node.path()]):
-        node_colors[node.state] = "green"
-        iterations += 1
-        all_node_colors.append(dict(node_colors))
-        return(iterations, all_node_colors, node)
-    
     frontier = PriorityQueue()
     frontier.append(node, f(node))
 
@@ -67,12 +61,14 @@ def best_first_graph_search_for_vis(problem, f):
         all_node_colors.append(dict(node_colors))
         
         if problem.goal_test([node.state for node in node.path()]):
+            # Todos os nós que estavam sendo explorados são abandonados
             for item in node_colors.keys():
                 if node_colors[item] != "white":
                     node_colors[item] = "gray"
-                    
+
             for item in node.path():
                 node_colors[item.state] = "green"
+                node_colors[problem.initial] = "red"
  
             iterations += 1
             all_node_colors.append(dict(node_colors))

@@ -176,27 +176,18 @@ class PacmanProblem(Problem):
             return []
 
 
+
 pacman_problem = PacmanProblem((1,1), (8,11))
 
 reachable = pacman_problem.reachable_positions(pacman_problem.initial)
 
 graph = dict()
 aux = {}
-i = 0
 for position in reachable:
-    aux[i] = position
-    i = i + 1
+    aux[position] = position
 
-i = 0
-for item in aux.values():
-    keys = []
-    for position in pacman_problem.adjacent(aux[i]):
-        for ki, vi in aux.items():
-            if position == vi:
-                keys.append(ki)
-                break
-    graph[i] = dict.fromkeys(keys, 1)
-    i = i + 1
+for item in aux.keys():
+    graph[item] = dict.fromkeys(pacman_problem.adjacent(aux[item]), 1)
 
 pacman_map = UndirectedGraph(graph)
 
@@ -205,18 +196,11 @@ pacman_map.locations = aux
 node_colors = {node: 'white' for node in pacman_map.locations.keys()}
 node_positions = pacman_map.locations
 node_label_pos = { k:[v[0]-0.25, v[1]-0.4] for k,v in pacman_map.locations.items() }
-edge_weights = { (k,k2) : 1 for k,v in pacman_map.graph_dict.items() for k2,v2 in v.items()}
+edge_weights = { (k,k2) : '' for k,v in pacman_map.graph_dict.items() for k2,v2 in v.items()}
 
 iterations, all_node_colors, node = astar_search_graph(pacman_problem)
 
 result_node_colors = all_node_colors[-1]
-
-node_colors = {}
-for k,v in result_node_colors.items():
-    for ki, vi in aux.items():
-        if aux[ki] == k:
-            node_colors[ki] = v
-            break
 
 pacman_graph_data = {
     'graph_dict': pacman_map.graph_dict,
@@ -226,4 +210,7 @@ pacman_graph_data = {
     'edge_weights': edge_weights
 }
 
-show_map(pacman_graph_data)
+#show_map(pacman_graph_data)
+
+display_visual(pacman_graph_data, user_input=False, algorithm=astar_search_graph, problem=pacman_problem)
+
