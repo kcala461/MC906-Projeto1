@@ -14,7 +14,7 @@ class PriorityQueue:
             self.items.append((item, priority))
 
     def pop(self):
-        self.items.sort(key=lambda x :x[1])
+        self.items.sort(key=lambda x:x[1])
         return self.items.pop(0)[0]
 
     def __iter__(self):
@@ -37,7 +37,90 @@ class PriorityQueue:
     def __getitem__(self, index):
         return self.items[index]
 
+def best_first_graph_search_for_vis(problem, f):
+    iterations = 0
+    all_node_colors = []
+    node_colors = {k : 'white' for k in set(problem.reachable_positions(problem.initial))}
 
+    node = Node(problem.initial)
+
+    node_colors[node.state] = "red"
+    iterations += 1
+    all_node_colors.append(dict(node_colors))
+
+    frontier = PriorityQueue()
+    frontier.append(node, f(node))
+
+    node_colors[node.state] = "orange"
+    iterations += 1
+    all_node_colors.append(dict(node_colors))
+
+    explored = set()
+    while not frontier.isEmpty():
+        node = frontier.pop()
+
+        node_colors[node.state] = "red"
+        iterations += 1
+        all_node_colors.append(dict(node_colors))
+
+        if problem.goal_test([node.state for node in node.path()]):
+            # Todos os nós que estavam sendo explorados são abandonados
+            for item in node_colors.keys():
+                if node_colors[item] != "white":
+                    node_colors[item] = "gray"
+
+            for item in node.path():
+                node_colors[item.state] = "green"
+                node_colors[problem.initial] = "red"
+ 
+            iterations += 1
+            all_node_colors.append(dict(node_colors))
+            return(iterations, all_node_colors, node)
+        
+        explored.add(node.state)
+        for child in node.expand(problem):
+            if child.state not in explored and child not in frontier:
+                frontier.append(child, f(child))
+                node_colors[child.state] = "orange"
+                iterations += 1
+                all_node_colors.append(dict(node_colors))
+            elif child in frontier:
+                incumbent = frontier[child]
+                if f(child) < f(incumbent):
+                    del frontier[incumbent]
+                    frontier.append(child, f(child))
+                    node_colors[child.state] = "orange"
+                    iterations += 1
+                    all_node_colors.append(dict(node_colors))
+
+        node_colors[node.state] = "gray"
+        iterations += 1
+        all_node_colors.append(dict(node_colors))
+    return iterations, all_node_colors, node
+
+def astar_search_graph(problem, h=None , g=None):
+    if h == None:
+        h = problem.h2
+    if g == None:
+        g = problem.g
+    iterations, all_node_colors, node = best_first_graph_search_for_vis(problem, 
+                                                                lambda n: g(n) + h(n))
+    return(iterations, all_node_colors, node)
+
+
+
+def greedy_best_first_search(problem, h=None):
+    """Greedy Best-first graph search is an informative searching algorithm with f(n) = h(n).
+    You need to specify the h function when you call best_first_search, or
+    else in your Problem subclass."""
+    if h == None:
+        h = problem.h2
+    iterations, all_node_colors, node = best_first_graph_search_for_vis(problem, lambda n: h(n))
+    return(iterations, all_node_colors, node)
+
+def uniform_cost_search(problem, display=False):
+    iterations, all_node_colors, node = best_first_graph_search_for_vis(problem, lambda node: node.path_cost)
+    return(iterations, all_node_colors, node)
 
 # def argmax_random_tie(neighbors, key):
 #     if key == None:
@@ -77,36 +160,36 @@ def recursive_best_first_search_for_vis(problem, h=None):
             nonlocal iterations
             iterations += 1
             all_node_colors.append(dict(node_colors))
-
+            
         if problem.goal_test([node.state for node in node.path()]):
             color_city_and_update_map(node, 'green')
             return (iterations, all_node_colors, node), 0  # the second value is immaterial
-
+        
         successors = node.expand(problem)
         if len(successors) == 0:
             color_city_and_update_map(node, 'gray')
             return (iterations, all_node_colors, None), sys.maxsize
-
+        
         for s in successors:
             color_city_and_update_map(s, 'orange')
             s.f = max(s.path_cost + h(s), node.f)
-
+            
         while True:
             # Order by lowest f value
             successors.sort(key=lambda x: x.f)
             best = successors[0]
             if problem.goal_test([best]):
                 color_city_and_update_map(best, 'green')
-                return iterations, all_node_colors, best
+                return (iterations, all_node_colors, best) 
             if best.f > flimit:
                 color_city_and_update_map(node, 'gray')
                 return (iterations, all_node_colors, None), best.f
-
+            
             if len(successors) > 1:
                 alternative = successors[1].f
             else:
                 alternative = sys.maxsize
-
+                
             node_colors[node.state] = 'gray'
             node_colors[best.state] = 'red'
             iterations += 1
@@ -117,10 +200,10 @@ def recursive_best_first_search_for_vis(problem, h=None):
                 return result, best.f
             else:
                 color_city_and_update_map(node, 'red')
-
+            
     node = Node(problem.initial)
     node.f = h(node)
-
+    
     node_colors[node.state] = 'red'
     iterations += 1
     all_node_colors.append(dict(node_colors))

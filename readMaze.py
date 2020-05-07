@@ -8,7 +8,7 @@ import numpy as np
 # 5 representa o objetivo
 
 # A organizacao do arquivo do labirinto deve ser: numLinhas numColunas coordenada00 coordenada01 ...
-def readMaze(filename="mazes/Maze1"):
+def readMaze(filename="mazes/Maze2"):
     array = np.fromfile(filename, 'int32', -1, ' ')
     maze = np.reshape(array[2:], (array[0], array[1]))
     return maze, array[0], array[1]
