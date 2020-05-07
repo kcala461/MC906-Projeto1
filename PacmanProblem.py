@@ -1,3 +1,5 @@
+import sys
+
 import readMaze as rM
 from search import Node, Problem
 import math
@@ -9,6 +11,11 @@ from notebook import show_map, display_visual
 from search import UndirectedGraph
 from dfs_for_vis import depth_first_tree_search, depth_first_graph_search
 import time as time
+
+def brutal_distance(p1, p2):
+    dX = (p1[0] - p2[0])**2
+    dY = (p1[1] - p2[1])**2
+    return (dX + dY) ** 0.5
 
 
 class PacmanProblem(Problem):
@@ -89,6 +96,8 @@ class PacmanProblem(Problem):
 
         return set(positions)
 
+
+
     # Diz se uma posicao eh alcancavel a partir de outra (True ou False)
     def reachable(self, position1, position2):
         positions = self.reachable_positions(position1)
@@ -98,15 +107,46 @@ class PacmanProblem(Problem):
     def value(self, states):
         return -1 * len(states) + 2 * len(set(states))
 
+    def h2(self, node):
+        return self.euclidean_distance(node.state, self.goal)
+
     def h(self, node):
-        return self.distance(node.state, self.goal)
+        return self.manhattan_distance(node.state, self.goal)
 
     def g(self, node):
         return node.path_cost
 
+    def euclidean_distance(self, position1, position2):
+        if self.reachable(position1, position2) is False:
+            return math.inf
+
+        # d = self.reachable_positions(position1)
+        #
+        # reach = []
+        # flag_x = False
+        # flag_y = False
+        #
+        # for i in d:
+        #     if i[0] == 0:
+        #         d_aux = (self.mazeY - 1, i[1])
+        #         if self.reachable(d_aux, self.goal) and d.__contains__((self.mazeY - 1, i[1])):
+        #             flag_y = True
+        #     if i[1] == 0:
+        #         d_aux = (i[0], self.mazeX - 1)
+        #         if self.reachable(d_aux, self.goal) and d.__contains__((i[0], self.mazeX - 1)):
+        #             flag_x = True
+
+
+        deltaX1 = (position2[0] - position1[0])**2
+
+        deltaY1 = (position2[1] - position1[1])**2
+        return (deltaX1 + deltaY1)**0.5
+
+
+
     # Calcula a distancia entre duas posicoes, valido apenas para posicoes que fazem parte da sol
     @functools.lru_cache(maxsize=4096)
-    def distance(self, position1, position2, lim=100000):
+    def manhattan_distance(self, position1, position2, lim=100000):
         if position1 == position2:
             return 0
 
@@ -179,9 +219,8 @@ class PacmanProblem(Problem):
             return []
 
 
-# best_first_graph_search_for_vis(PacmanProblem((1,1), (8,11), lambda node : node.path_cost))
-
-pacman_problem = PacmanProblem((1, 1), (2, 6))
+pacman_problem = PacmanProblem((1, 1), (8, 11))
+# print("distancia = " + str(pacman_problem.manhattan_distance((9, 1), (1, 1))))
 
 reachable = pacman_problem.reachable_positions(pacman_problem.initial)
 
@@ -202,22 +241,31 @@ node_positions = pacman_map.locations
 node_label_pos = {k: [v[0] - 0.25, v[1] - 0.4] for k, v in pacman_map.locations.items()}
 edge_weights = {(k, k2): 1 for k, v in pacman_map.graph_dict.items() for k2, v2 in v.items()}
 
+
+
+# print(pacman_problem.mazeX)
+# print(pacman_problem.manhattan((1, 8), (2, 12)))
+# a = pacman_problem.non_visited_reachable_positions((1, 4))
+# print(a)
+
 # ---------------------------------- METHOD CALLS -----------------------------------------------------
 # ----------------------------------      A*      -----------------------------------------------------
 
 # start = time.time()
 # iterations, all_node_colors, node = astar_search_graph(pacman_problem)
 # end = time.time()
-# print("time elapsed for astar_search_graph = "+ str(end - start) + 's')
-# print("iterations = "+ str(iterations))
+# print("time elapsed for astar_search_graph = " + str(end - start) + 's')
+# print("iterations = " + str(iterations))
+
 
 # ----------------------------------  GREEDY_BEST_FIRST ------------------------------------------------
 
-# start = time.time()
-# iterations, all_node_colors, node = greedy_best_first_search(pacman_problem)
-# end = time.time()
-# print("time elapsed for greedy_best_first_search = " + str(end - start) + 's')
-# print("iterations = " + str(iterations))
+start = time.time()
+iterations, all_node_colors, node = greedy_best_first_search(pacman_problem, pacman_problem.h2)
+end = time.time()
+print("time elapsed for greedy_best_first_search = " + str(end - start) + 's')
+print("iterations = " + str(iterations))
+
 
 # ----------------------------------  UNIFORM_COST  -----------------------------------------------------
 
@@ -227,13 +275,15 @@ edge_weights = {(k, k2): 1 for k, v in pacman_map.graph_dict.items() for k2, v2 
 # print("time elapsed for uniform_cost_search = "+ str(end - start) + 's')
 # print("iterations = "+ str(iterations))
 
+
 # ----------------------------------  BREADTH_FIRST  ----------------------------------------------------------
 
 # start = time.time()
 # iterations, all_node_colors, node = breadth_first_tree_search(pacman_problem)
 # end = time.time()
 # print("time elapsed for breadth_first_tree_search = "+ str(end - start) + 's')
-# print("iterations = "+ str(iterations))
+# print("iterations = " + str(iterations))
+
 
 # ----------------------------------  RECURSIVE_BEST_FIRST  ------------------------------------------------
 
@@ -243,13 +293,15 @@ edge_weights = {(k, k2): 1 for k, v in pacman_map.graph_dict.items() for k2, v2 
 # print("time elapsed for recursive_best_first_search_for_vis = "+ str(end - start) + 's')
 # print("iterations = "+ str(iterations))
 
+
 # ----------------------------------  DEPTH_FIRST  ----------------------------------------------------------
 
-start = time.time()
-iterations, all_node_colors, node = depth_first_graph_search(pacman_problem)
-end = time.time()
-print("time elapsed for depth_first_graph_search = "+ str(end - start) + 's')
-print("iterations = "+ str(iterations))
+# start = time.time()
+# iterations, all_node_colors, node = depth_first_graph_search(pacman_problem)
+# end = time.time()
+# print("time elapsed for depth_first_graph_search = "+ str(end - start) + 's')
+# print("iterations = "+ str(iterations))
+
 
 result_node_colors = all_node_colors[-1]
 
@@ -268,7 +320,6 @@ pacman_graph_data = {
     'edge_weights': edge_weights
 }
 
-show_map(pacman_graph_data)
+# show_map(pacman_graph_data)
 
-# breadth_first_tree_search(PacmanProblem((1, 1), (8, 11)))
 # display_visual(pacman_graph_data, True, best_first_graph_search_for_vis, PacmanProblem((1,1), (8,11)))

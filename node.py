@@ -15,6 +15,7 @@ class Node:
         self.parent = parent
         self.action = action
         self.path_cost = path_cost
+        self.fruit = True
         self.depth = 0
         if parent:
             self.depth = parent.depth + 1

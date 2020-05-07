@@ -96,11 +96,11 @@ def best_first_graph_search_for_vis(problem, f):
         node_colors[node.state] = "gray"
         iterations += 1
         all_node_colors.append(dict(node_colors))
-    return iterations, None, None
+    return iterations, all_node_colors, node
 
 def astar_search_graph(problem, h=None , g=None):
     if h == None:
-        h = problem.h
+        h = problem.h2
     if g == None:
         g = problem.g
     iterations, all_node_colors, node = best_first_graph_search_for_vis(problem, 
@@ -114,7 +114,7 @@ def greedy_best_first_search(problem, h=None):
     You need to specify the h function when you call best_first_search, or
     else in your Problem subclass."""
     if h == None:
-        h = problem.h
+        h = problem.h2
     iterations, all_node_colors, node = best_first_graph_search_for_vis(problem, lambda n: h(n))
     return(iterations, all_node_colors, node)
 
@@ -150,7 +150,7 @@ def recursive_best_first_search_for_vis(problem, h=None):
     all_node_colors = []
     node_colors = {k : 'white' for k in set(problem.reachable_positions(problem.initial))}
     
-    h = problem.h
+    h = problem.h2
     
     def RBFS(problem, node, flimit):
         nonlocal iterations
