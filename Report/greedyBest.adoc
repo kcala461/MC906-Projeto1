@@ -1,5 +1,5 @@
 [subs=+macros]
-[source,asciidoc]
+
 = Informed Search
 
 :stem:
@@ -10,13 +10,14 @@ They were a relevant parameter for our project. On Informed Search algorithms th
 For the Pacman Maze problem, our heuristics worked around finding the action that would take the agent to a less distant point to the goal.
 Searching on the bibliography and the internet we found two approaches taken on problems like these.
 
-** Manhattan Distance
+** Distância Manhattan
 
 
 image::ManhattanDistanceRepr.png[manhattan, 240, 240, align=center]
 
-Based on the "real" distance that the agent will travel. Considers the corners to be taken, like a count of steps. 
-It was necessary a little cost over the processing of it on each neighbor of the current node we were analyzing.
+Baseado na "real" distância que o agente irá percorrer. Considera o número de passos que serão dados, o número de ações que serão tomadas.
+
+O processamento é um pouco mais custoso do que o normal, devido a essa metodologia.
 
 ----
    # Calcula a distancia entre duas posicoes, valido apenas para posicoes que fazem parte da sol
@@ -57,7 +58,6 @@ It was necessary a little cost over the processing of it on each neighbor of the
 ----
 
 
-
 O algoritmo acima checa a *distância de manhattan* entre dois pontos.
 Inicialmente, ele checa se os pontos passados se referem a mesma posição, em caso positivo, já temos nossa resposta! (e nos poupa um bom processamento). Em caso negativo manhattan_distance usa uma função auxiliar (_reachable_positions_) que nos retorna um dicionário onde dada a chave (coordenadas da respectiva posição) temos um valor (uma lista [distancia, visitado]).
 Enquanto não existir elementos ainda não visitados, avaliamos o *mais próximo* dentre estes,  da posição corrente da nossa busca.
@@ -69,7 +69,7 @@ Esse processo continua até que se visite a posição dada por _position2_
 Ou seja, em resumo, simulamos os passos a serem dados para nosso agente chegar de um ponto A (_position1_) a um ponto B (_position2_) e projetamos o menor caminho possível, sustentado pela estratégia de que iniciamos cada uma das "buscas parciais" do nó com a menor distância, nos termos de manhattan, a cada iteração.
 
 
-** Euclidean Distance
+** Distância Euclidiana
     
 ----
       def euclidean_distance(self, position1, position2):
@@ -87,23 +87,45 @@ A distância euclidiana avalia simplismente, a distância em linha reta, do pont
 
 Em primeiro lugar, checamos se os dois pontos são alcançáveis. Se sim, calculamos a distância segundo a fórmula de Euclides:
 
+[asciimath]
+++++
+sqrt((x - x)² + (y - y)²)
+++++
 
-stem:[ sqrt((x - x)² + (y - y)²) ]
+** Algoritmo
 
+O _Greedy Best First Search Algoritm_ funciona de maneira muito parecida com o _A* Search_. A partir de um nó inicial, avalia-se o custo f(n) do caminho a cada um de seus possíveis destinos, de acordo com as ações que poderão ser tomadas.
 
+Onde
 
-** Algorithm
+----
+f(n) = g(n) + h(n) , onde g(n) é o custo do caminho tomado e h(n) é o custo segundo a heurística adotada para a avaliação.
+----
 
+Seu nome greedy (ganancioso) se dá pelo fato de que após uma ação tomada, não faz mais parte da avaliação (até que se comprove que o caminho não se dá até o goal) os custos perantes as demais ações possíveis, os outros nós adjacentes no nosso caso.
 
-** State Representation
+image::Greedy.png[greedy, 240, 240, align=center]
 
-** Node Expansion
+Acima vemos uma imagem que ilustra o comportamento do algoritmo, independente de que outros nós possam formar um caminho mais caro, por agora, mas mais vantajoso como solução completa.
+
+** Representação do estado
+
+Como forma de facilitar nosso trabalho, usamos a estrutura da ferramenta AIMA, dada como auxílio para o desenvolvimento do nosso projeto. Aproveitamos a classe *_Node_* para armazenar o estado, que nada mais seria que as coordenadas (x, y) descrevendo a posição no maze.
+
+Essa classe contém alguns métodos que nos serão muito úteis, como o método _path_, que nos dá o caminho percorrido até ali pela busca, ou o _expand_ que nos retorna uma lista de nós que podemos seguir a partir das ações disponíveis.
 
 ** Goal Test
 
-** Complexity
+Simplesmente é passado o path contendo o novo node a ser avaliado e, como estrutura do problema, nosso goal.
+Caso o goal esteja contido no path achamos nosso objetivo! O agente então poderá agir.
 
-** Behaviour
+Aqui é importante lembrar que nosso agente realiza somente buscas offline, ou seja, antes de realizar uma ação, a busca é executada e uma solução é encontrada.
+
+** Complexidade
+
+O algoritmo é completo, na questão que, se existente, sempre achará uma solução. Por outro lado, ele não pode ser considerado ótimo, apesar de que em alguns casos essa solução coincide com o melhor caso, justamente pelo fato de que, se posteriormente, durante a busca, o caminho se tornar custoso, mas chegarmos a uma solução, ele será apresentado ao agente.
+
+** Comportamento Analisado
 
 
 
