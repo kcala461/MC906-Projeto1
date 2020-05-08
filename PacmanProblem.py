@@ -4,6 +4,7 @@ import math
 import functools
 from uninformed_search import breadth_first_search, depth_first_search
 from informed_search import astar_search_graph, greedy_best_first_search, uniform_cost_search, recursive_best_first_search
+from local_search import hill_climbing_search
 from notebook import display_visual
 import time as time
 
@@ -251,12 +252,11 @@ edge_weights = {(k, k2): 1 for k, v in pacman_map.graph_dict.items() for k2, v2 
 
 # ----------------------------------  GREEDY_BEST_FIRST ------------------------------------------------
 
-start = time.time()
-iterations, all_node_colors, node = greedy_best_first_search(pacman_problem, pacman_problem.h2)
-end = time.time()
-print("time elapsed for greedy_best_first_search = " + str(end - start) + 's')
-print("iterations = " + str(iterations))
-
+# start = time.time()
+# iterations, all_node_colors, node = greedy_best_first_search(pacman_problem, pacman_problem.h2)
+# end = time.time()
+# print("time elapsed for greedy_best_first_search = " + str(end - start) + 's')
+# print("iterations = " + str(iterations))
 
 # ----------------------------------  UNIFORM_COST  -----------------------------------------------------
 
@@ -293,6 +293,14 @@ print("iterations = " + str(iterations))
 # print("time elapsed for depth_first_tree_search = " + str(end - start) + 's')
 # print("iterations = " + str(iterations))
 
+# ----------------------------------     HILL_CLIMBING    ------------------------------------------------
+
+start = time.time()
+iterations, all_node_colors, node = hill_climbing_search(pacman_problem)
+end = time.time()
+print("time elapsed for hill_climbing_search = " + str(end - start) + 's')
+print("iterations = " + str(iterations))
+
 # ----------------------------------  VISUAL_DISPLAY  ----------------------------------------------------------
 
 result_node_colors = all_node_colors[-1]
@@ -312,6 +320,6 @@ pacman_graph_data = {
     'edge_weights': edge_weights
 }
 
-# show_map(pacman_graph_data)
+show_map(pacman_graph_data)
 
-# display_visual(pacman_graph_data, True, best_first_graph_search_for_vis, PacmanProblem((1,1), (8,11)))
+#display_visual(pacman_graph_data, True, greedy_best_first_search, PacmanProblem((1,1), (8,11)))
