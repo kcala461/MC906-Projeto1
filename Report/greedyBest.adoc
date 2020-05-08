@@ -1,0 +1,47 @@
+= Informed Search
+
+* Heuristics
+
+    They were a relevant parameter for our project. On Informed Search algorithms they are accounted within the path cost to serve as an evaluation that our agent will use to choose the next step it will take, the next action, and help to find a solution (sometimes optimal sometimes not) to our problem.
+    For the Pacman Maze problem, our heuristics worked around finding the action that would take the agent to a less distant point to the goal.
+    Searching on the bibliography and the internet we found two approaches taken on problems like these.
+
+** Manhattan Distance
+
+    image::ManhattanDistanceRepr.png[]
+
+
+
+
+    
+
+** Euclidean Distance
+
+
+* Greedy Best First Search
+
+    ** Algorithm
+
+    
+    ** State Representation
+
+    ** Node Expansion
+
+    ** Goal Test
+
+    ** Complexity
+
+    ** Behaviour
+
+
+
+    
+
+
+        
+
+
+
+
+
+
