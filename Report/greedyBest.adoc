@@ -1,3 +1,4 @@
+[subs=+macros]
 = Informed Search
 
 * Heuristics
@@ -54,7 +55,7 @@ image::ManhattanDistanceRepr.png[manhattan, 240, 240, align="center"]
 
     O algoritmo acima checa a *distância de manhattan* entre dois pontos.
     Inicialmente, ele checa se os pontos passados se referem a mesma posição, em caso positivo, já temos nossa resposta! (e nos poupa um bom processamento). Em caso negativo manhattan_distance usa uma função auxiliar (_reachable_positions_) que nos retorna um dicionário onde dada a chave (coordenadas da respectiva posição) temos um valor (uma lista [distancia, visitado]).
-    Enquanto não existir elementos ainda não visitados, avaliamos o *mais próximo*. dentre estes,  da posição corrente da nossa busca.
+    Enquanto não existir elementos ainda não visitados, avaliamos o *mais próximo* dentre estes,  da posição corrente da nossa busca.
 
     Com esse nó avaliado no loop, para cada posição adjacente não avaliada, incrementa-se a distância respectiva.
 
