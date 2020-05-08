@@ -52,14 +52,13 @@ image::ManhattanDistanceRepr.png[manhattan, 240, 240, align="center"]
             return math.inf
 ----
 
-    
-
     O algoritmo acima checa a *distância de manhattan* entre dois pontos.
     Inicialmente, ele checa se os pontos passados se referem a mesma posição, em caso positivo, já temos nossa resposta! (e nos poupa um bom processamento). Em caso negativo manhattan_distance usa uma função auxiliar (_reachable_positions_) que nos retorna um dicionário onde dada a chave (coordenadas da respectiva posição) temos um valor (uma lista [distancia, visitado]).
-    Enquanto não existir elementos ainda não visitados, avaliamos o **mais próximo** , dentre estes,  da posição corrente da nossa busca.
+    Enquanto não existir elementos ainda não visitados, avaliamos o *mais próximo*. dentre estes,  da posição corrente da nossa busca.
+
     Com esse nó avaliado no loop, para cada posição adjacente não avaliada, incrementa-se a distância respectiva.
 
-    Esse processo continua até que se visite a posição dada por *_position2_* 
+    Esse processo continua até que se visite a posição dada por _position2_ 
 
     Ou seja, em resumo, simulamos os passos a serem dados para nosso agente chegar de um ponto A (_position1_) a um ponto B (_positio2_) e projetamos o menor caminho possível, sustentado pela estratégia de que iniciamos cada uma das "buscas parciais" do nó com a menor distância, nos termos de manhattan, a cada iteração.
 
