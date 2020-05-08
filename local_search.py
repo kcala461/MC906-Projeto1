@@ -32,11 +32,14 @@ def hill_climbing_search(problem):
         neighbors = node.expand(problem)
         if not neighbors:
             break
-        neighbor = argmin_random_tie(neighbors, key=lambda node: problem.h2(node.state))
+        neighbor = argmin_random_tie(neighbors, key=lambda node: problem.h2(node))
         
-        # trying to find minimum
-        if problem.h2(neighbor.state) > problem.h2(node.state): 
-            break
+        # trying to find minimum 
+        if problem.h2(neighbor) > problem.h2(node):
+            # node is already the minimum
+            node_colors[node.state] = "green"
+            all_node_colors.append(dict(node_colors))
+            return iterations, all_node_colors, node
             
         frontier.extend(child for child in node.expand(problem)
                         if child.state not in explored and
