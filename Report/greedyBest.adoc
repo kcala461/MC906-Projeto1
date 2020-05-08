@@ -8,12 +8,50 @@
 
 ** Manhattan Distance
 
-    image::ManhattanDistanceRepr.png[]
 
+image::ManhattanDistanceRepr.png[manhattan, 240, 240, align="center"]
 
+    Based on the "real" distance that the agent will travel. Considers the corners to be taken, like a count of steps. 
+    It was necessary a little cost over the processing of it on each neighbor of the current node we were analyzing.
 
+----
+   # Calcula a distancia entre duas posicoes, valido apenas para posicoes que fazem parte da sol
+    @functools.lru_cache(maxsize=4096)
+    def manhattan_distance(self, position1, position2, lim=100000):
+        if position1 == position2:
+            return 0
 
-    
+        # dicicionario com formato { item: [distancia, visitado (0 = nao, 1 = sim)], ... }
+        d = dict.fromkeys(self.reachable_positions(position1), [math.inf, 0])
+        d[position1] = [0, 0]
+
+        i = 0
+        while min({l[1] for l in d.values()}) == 0 and i < lim:
+            m = math.inf
+            current = None
+            for k, v in d.items():
+                if v[1] == 0 and v[0] < m:
+                    current = k
+                    m = v[0]
+
+            d[current] = [m, 1]
+
+            neighbors = self.adjacent(current)
+            for neighbor in neighbors:
+                if d[neighbor][1] == 0 and m + 1 < d[neighbor][0]:
+                    d[neighbor] = [m + 1, 0]
+                    if neighbor == position2:
+                        return m + 1
+
+            current = None
+            i = i + 1
+
+        try:
+            return d[position2][0]
+        except KeyError:
+            return math.inf
+----
+
 
 ** Euclidean Distance
 
