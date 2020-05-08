@@ -11,7 +11,7 @@ Searching on the bibliography and the internet we found two approaches taken on 
 ** Manhattan Distance
 
 
-image::ManhattanDistanceRepr.png[manhattan, 240, 240, align="center"]
+image::ManhattanDistanceRepr.png[manhattan, 240, 240, align=center]
 
 Based on the "real" distance that the agent will travel. Considers the corners to be taken, like a count of steps. 
 It was necessary a little cost over the processing of it on each neighbor of the current node we were analyzing.
