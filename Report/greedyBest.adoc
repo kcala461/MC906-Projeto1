@@ -2,6 +2,8 @@
 [source,asciidoc]
 = Informed Search
 
+:stem:
+
 * Heuristics
 
 They were a relevant parameter for our project. On Informed Search algorithms they are accounted within the path cost to serve as an evaluation that our agent will use to choose the next step it will take, the next action, and help to find a solution (sometimes optimal sometimes not) to our problem.
@@ -86,7 +88,7 @@ A distância euclidiana avalia simplismente, a distância em linha reta, do pont
 Em primeiro lugar, checamos se os dois pontos são alcançáveis. Se sim, calculamos a distância segundo a fórmula de Euclides:
 
 
-asciimath:[sqrt((x - x)² + (y - y)²)]
+stem:[ sqrt((x - x)² + (y - y)²) ]
 
 
 
