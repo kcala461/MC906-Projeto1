@@ -382,59 +382,6 @@ print("positions visited = " + str(len(set([x.state for x in node.path()]))))
 #  }
 # show_map(pacman_graph_data)
 
-# ----------------------------------  UNIFORM_COST  -----------------------------------------------------
-
-start = time.time()
-iterations, all_node_colors, node = uniform_cost_search(pacman_problem1)
-end = time.time()
-print("time elapsed for problem1 uniform_cost_search = "+ str(end - start) + 's')
-print("iterations = "+ str(iterations))
-print("positions visited = " + str(len(set([x.state for x in node.path()]))))
-
-# result_node_colors = all_node_colors[-1]
-# pacman_graph_data = {
-#     'graph_dict': pacman_map1.graph_dict,
-#     'node_colors': result_node_colors,
-#     'node_positions': node_positions1,
-#     'node_label_positions': node_label_pos1,
-#     'edge_weights': edge_weights1
-#  }
-# show_map(pacman_graph_data)
-
-start = time.time()
-iterations, all_node_colors, node = uniform_cost_search(pacman_problem2)
-end = time.time()
-print("time elapsed for problem2 uniform_cost_search = "+ str(end - start) + 's')
-print("iterations = "+ str(iterations))
-print("positions visited = " + str(len(set([x.state for x in node.path()]))))
-
-# result_node_colors = all_node_colors[-1]
-# pacman_graph_data = {
-#     'graph_dict': pacman_map2.graph_dict,
-#     'node_colors': result_node_colors,
-#     'node_positions': node_positions2,
-#     'node_label_positions': node_label_pos2,
-#     'edge_weights': edge_weights2
-#  }
-# show_map(pacman_graph_data)
-
-start = time.time()
-iterations, all_node_colors, node = uniform_cost_search(pacman_problem3)
-end = time.time()
-print("time elapsed for problem3 uniform_cost_search = "+ str(end - start) + 's')
-print("iterations = "+ str(iterations))
-print("positions visited = " + str(len(set([x.state for x in node.path()]))))
-
-# result_node_colors = all_node_colors[-1]
-# pacman_graph_data = {
-#     'graph_dict': pacman_map3.graph_dict,
-#     'node_colors': result_node_colors,
-#     'node_positions': node_positions3,
-#     'node_label_positions': node_label_pos3,
-#     'edge_weights': edge_weights3
-#  }
-# show_map(pacman_graph_data)
-
 # ----------------------------------  BREADTH_FIRST  ----------------------------------------------------------
 
 start = time.time()
