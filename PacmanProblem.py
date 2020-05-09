@@ -1,6 +1,7 @@
 import functools
 import math
 import time as time
+from notebook import show_map
 
 import readMaze as rM
 from Problem import Problem, UndirectedGraph
@@ -186,6 +187,57 @@ pacman_problem1 = PacmanProblem((1, 1), (8, 11))
 pacman_problem2 = PacmanProblem((2, 12), (4, 12))
 pacman_problem3 = PacmanProblem((0, 1), (2, 12), "mazes/Maze2")
 
+reachable1 = pacman_problem1.reachable_positions(pacman_problem1.initial)
+reachable2 = pacman_problem2.reachable_positions(pacman_problem2.initial)
+reachable3 = pacman_problem3.reachable_positions(pacman_problem3.initial)
+
+# Showmap Problem 1
+graph1 = dict()
+aux1 = {}
+for position in reachable1:
+    aux1[position] = position
+for item in aux1.keys():
+    graph1[item] = dict.fromkeys(pacman_problem1.adjacent(aux1[item]), 1)
+
+pacman_map1 = UndirectedGraph(graph1)
+pacman_map1.locations = aux1
+
+node_colors1 = {node: 'white' for node in pacman_map1.locations.keys()}
+node_positions1 = pacman_map1.locations
+node_label_pos1 = {k: [v[0] - 0.25, v[1] - 0.4] for k, v in pacman_map1.locations.items()}
+edge_weights1 = {(k, k2): '' for k, v in pacman_map1.graph_dict.items() for k2, v2 in v.items()}
+
+# Showmap Problem 2
+graph2 = dict()
+aux2 = {}
+for position in reachable2:
+    aux2[position] = position
+for item in aux2.keys():
+    graph2[item] = dict.fromkeys(pacman_problem2.adjacent(aux2[item]), 1)
+
+pacman_map2 = UndirectedGraph(graph2)
+pacman_map2.locations = aux2
+
+node_colors2 = {node: 'white' for node in pacman_map2.locations.keys()}
+node_positions2 = pacman_map2.locations
+node_label_pos2 = {k: [v[0] - 0.25, v[1] - 0.4] for k, v in pacman_map1.locations.items()}
+edge_weights2 = {(k, k2): '' for k, v in pacman_map2.graph_dict.items() for k2, v2 in v.items()}
+
+# Showmap Problem 3
+graph3 = dict()
+aux3 = {}
+for position in reachable3:
+    aux3[position] = position
+for item in aux3.keys():
+    graph3[item] = dict.fromkeys(pacman_problem3.adjacent(aux3[item]), 1)
+
+pacman_map3 = UndirectedGraph(graph3)
+pacman_map3.locations = aux3
+
+node_colors3 = {node: 'white' for node in pacman_map3.locations.keys()}
+node_positions3 = pacman_map3.locations
+node_label_pos3 = {k: [v[0] - 0.25, v[1] - 0.4] for k, v in pacman_map3.locations.items()}
+edge_weights3 = {(k, k2): '' for k, v in pacman_map3.graph_dict.items() for k2, v2 in v.items()}
 
 # ---------------------------------- METHOD CALLS -----------------------------------------------------
 # ----------------------------------      A*      -----------------------------------------------------
@@ -197,6 +249,16 @@ print("time elapsed for problem1 astar_search_graph = " + str(end - start) + 's'
 print("iterations = " + str(iterations))
 print("positions visited = " + str(len(set([x.state for x in node.path()]))))
 
+# result_node_colors = all_node_colors[-1]
+# pacman_graph_data = {
+#     'graph_dict': pacman_map1.graph_dict,
+#     'node_colors': result_node_colors,
+#     'node_positions': node_positions1,
+#     'node_label_positions': node_label_pos1,
+#     'edge_weights': edge_weights1
+#  }
+# show_map(pacman_graph_data)
+
 start = time.time()
 iterations, all_node_colors, node = astar_search_graph(pacman_problem2)
 end = time.time()
@@ -204,12 +266,32 @@ print("time elapsed for problem2 astar_search_graph = " + str(end - start) + 's'
 print("iterations = " + str(iterations))
 print("positions visited = " + str(len(set([x.state for x in node.path()]))))
 
+# result_node_colors = all_node_colors[-1]
+# pacman_graph_data = {
+#     'graph_dict': pacman_map2.graph_dict,
+#     'node_colors': result_node_colors,
+#     'node_positions': node_positions2,
+#     'node_label_positions': node_label_pos2,
+#     'edge_weights': edge_weights2
+#  }
+# show_map(pacman_graph_data)
+
 start = time.time()
 iterations, all_node_colors, node = astar_search_graph(pacman_problem3)
 end = time.time()
 print("time elapsed for problem3 astar_search_graph = " + str(end - start) + 's')
 print("iterations = " + str(iterations))
 print("positions visited = " + str(len(set([x.state for x in node.path()]))))
+
+# result_node_colors = all_node_colors[-1]
+# pacman_graph_data = {
+#     'graph_dict': pacman_map3.graph_dict,
+#     'node_colors': result_node_colors,
+#     'node_positions': node_positions3,
+#     'node_label_positions': node_label_pos3,
+#     'edge_weights': edge_weights3
+#  }
+# show_map(pacman_graph_data)
 
 
 # ----------------------------------  GREEDY_BEST_FIRST ------------------------------------------------
@@ -221,6 +303,16 @@ print("time elapsed for problem1 greedy_best_first_search = " + str(end - start)
 print("iterations = " + str(iterations))
 print("positions visited = " + str(len(set([x.state for x in node.path()]))))
 
+# result_node_colors = all_node_colors[-1]
+# pacman_graph_data = {
+#     'graph_dict': pacman_map1.graph_dict,
+#     'node_colors': result_node_colors,
+#     'node_positions': node_positions1,
+#     'node_label_positions': node_label_pos1,
+#     'edge_weights': edge_weights1
+#  }
+# show_map(pacman_graph_data)
+
 start = time.time()
 iterations, all_node_colors, node = greedy_best_first_search(pacman_problem2, pacman_problem2.h)
 end = time.time()
@@ -228,12 +320,32 @@ print("time elapsed for problem2 greedy_best_first_search = " + str(end - start)
 print("iterations = " + str(iterations))
 print("positions visited = " + str(len(set([x.state for x in node.path()]))))
 
+# result_node_colors = all_node_colors[-1]
+# pacman_graph_data = {
+#     'graph_dict': pacman_map2.graph_dict,
+#     'node_colors': result_node_colors,
+#     'node_positions': node_positions2,
+#     'node_label_positions': node_label_pos2,
+#     'edge_weights': edge_weights2
+#  }
+# show_map(pacman_graph_data)
+
 start = time.time()
 iterations, all_node_colors, node = greedy_best_first_search(pacman_problem3, pacman_problem3.h)
 end = time.time()
 print("time elapsed for problem3 greedy_best_first_search = " + str(end - start) + 's')
 print("iterations = " + str(iterations))
 print("positions visited = " + str(len(set([x.state for x in node.path()]))))
+
+# result_node_colors = all_node_colors[-1]
+# pacman_graph_data = {
+#     'graph_dict': pacman_map3.graph_dict,
+#     'node_colors': result_node_colors,
+#     'node_positions': node_positions3,
+#     'node_label_positions': node_label_pos3,
+#     'edge_weights': edge_weights3
+#  }
+# show_map(pacman_graph_data)
 
 # ----------------------------------  UNIFORM_COST  -----------------------------------------------------
 
@@ -244,12 +356,32 @@ print("time elapsed for problem1 uniform_cost_search = "+ str(end - start) + 's'
 print("iterations = "+ str(iterations))
 print("positions visited = " + str(len(set([x.state for x in node.path()]))))
 
+# result_node_colors = all_node_colors[-1]
+# pacman_graph_data = {
+#     'graph_dict': pacman_map1.graph_dict,
+#     'node_colors': result_node_colors,
+#     'node_positions': node_positions1,
+#     'node_label_positions': node_label_pos1,
+#     'edge_weights': edge_weights1
+#  }
+# show_map(pacman_graph_data)
+
 start = time.time()
 iterations, all_node_colors, node = uniform_cost_search(pacman_problem2)
 end = time.time()
 print("time elapsed for problem2 uniform_cost_search = "+ str(end - start) + 's')
 print("iterations = "+ str(iterations))
 print("positions visited = " + str(len(set([x.state for x in node.path()]))))
+
+# result_node_colors = all_node_colors[-1]
+# pacman_graph_data = {
+#     'graph_dict': pacman_map2.graph_dict,
+#     'node_colors': result_node_colors,
+#     'node_positions': node_positions2,
+#     'node_label_positions': node_label_pos2,
+#     'edge_weights': edge_weights2
+#  }
+# show_map(pacman_graph_data)
 
 start = time.time()
 iterations, all_node_colors, node = uniform_cost_search(pacman_problem3)
@@ -258,6 +390,15 @@ print("time elapsed for problem3 uniform_cost_search = "+ str(end - start) + 's'
 print("iterations = "+ str(iterations))
 print("positions visited = " + str(len(set([x.state for x in node.path()]))))
 
+# result_node_colors = all_node_colors[-1]
+# pacman_graph_data = {
+#     'graph_dict': pacman_map3.graph_dict,
+#     'node_colors': result_node_colors,
+#     'node_positions': node_positions3,
+#     'node_label_positions': node_label_pos3,
+#     'edge_weights': edge_weights3
+#  }
+# show_map(pacman_graph_data)
 
 # ----------------------------------  BREADTH_FIRST  ----------------------------------------------------------
 
@@ -268,6 +409,16 @@ print("time elapsed for problem1 breadth_first_tree_search = "+ str(end - start)
 print("iterations = " + str(iterations))
 print("positions visited = " + str(len(set([x.state for x in node.path()]))))
 
+# result_node_colors = all_node_colors[-1]
+# pacman_graph_data = {
+#     'graph_dict': pacman_map1.graph_dict,
+#     'node_colors': result_node_colors,
+#     'node_positions': node_positions1,
+#     'node_label_positions': node_label_pos1,
+#     'edge_weights': edge_weights1
+#  }
+# show_map(pacman_graph_data)
+
 start = time.time()
 iterations, all_node_colors, node = breadth_first_search(pacman_problem2)
 end = time.time()
@@ -275,12 +426,32 @@ print("time elapsed for problem2 breadth_first_tree_search = "+ str(end - start)
 print("iterations = " + str(iterations))
 print("positions visited = " + str(len(set([x.state for x in node.path()]))))
 
+# result_node_colors = all_node_colors[-1]
+# pacman_graph_data = {
+#     'graph_dict': pacman_map2.graph_dict,
+#     'node_colors': result_node_colors,
+#     'node_positions': node_positions2,
+#     'node_label_positions': node_label_pos2,
+#     'edge_weights': edge_weights2
+#  }
+# show_map(pacman_graph_data)
+
 start = time.time()
 iterations, all_node_colors, node = breadth_first_search(pacman_problem3)
 end = time.time()
 print("time elapsed for problem3 breadth_first_tree_search = "+ str(end - start) + 's')
 print("iterations = " + str(iterations))
 print("positions visited = " + str(len(set([x.state for x in node.path()]))))
+
+# result_node_colors = all_node_colors[-1]
+# pacman_graph_data = {
+#     'graph_dict': pacman_map3.graph_dict,
+#     'node_colors': result_node_colors,
+#     'node_positions': node_positions3,
+#     'node_label_positions': node_label_pos3,
+#     'edge_weights': edge_weights3
+#  }
+# show_map(pacman_graph_data)
 
 
 # ----------------------------------  DEPTH_FIRST  ----------------------------------------------------------
@@ -292,12 +463,32 @@ print("time elapsed for problem1 depth_first_tree_search = " + str(end - start) 
 print("iterations = " + str(iterations))
 print("positions visited = " + str(len(set([x.state for x in node.path()]))))
 
+# result_node_colors = all_node_colors[-1]
+# pacman_graph_data = {
+#     'graph_dict': pacman_map1.graph_dict,
+#     'node_colors': result_node_colors,
+#     'node_positions': node_positions1,
+#     'node_label_positions': node_label_pos1,
+#     'edge_weights': edge_weights1
+#  }
+# show_map(pacman_graph_data)
+
 start = time.time()
 iterations, all_node_colors, node = depth_first_graph_search(pacman_problem2)
 end = time.time()
 print("time elapsed for problem2 depth_first_tree_search = " + str(end - start) + 's')
 print("iterations = " + str(iterations))
 print("positions visited = " + str(len(set([x.state for x in node.path()]))))
+
+# result_node_colors = all_node_colors[-1]
+# pacman_graph_data = {
+#     'graph_dict': pacman_map2.graph_dict,
+#     'node_colors': result_node_colors,
+#     'node_positions': node_positions2,
+#     'node_label_positions': node_label_pos2,
+#     'edge_weights': edge_weights2
+#  }
+# show_map(pacman_graph_data)
 
 start = time.time()
 iterations, all_node_colors, node = depth_first_graph_search(pacman_problem3)
@@ -306,44 +497,17 @@ print("time elapsed for problem3 depth_first_tree_search = " + str(end - start) 
 print("iterations = " + str(iterations))
 print("positions visited = " + str(len(set([x.state for x in node.path()]))))
 
+result_node_colors = all_node_colors[-1]
+pacman_graph_data = {
+    'graph_dict': pacman_map3.graph_dict,
+    'node_colors': result_node_colors,
+    'node_positions': node_positions3,
+    'node_label_positions': node_label_pos3,
+    'edge_weights': edge_weights3
+ }
+show_map(pacman_graph_data)
+
 # ----------------------------------  VISUAL_DISPLAY  ----------------------------------------------------------
 
-# reachable = pacman_problem.reachable_positions(pacman_problem.initial)
-
-# graph = dict()
-# aux = {}
-# for position in reachable:
-#     aux[position] = position
-
-# for item in aux.keys():
-#     graph[item] = dict.fromkeys(pacman_problem.adjacent(aux[item]), 1)
-
-# pacman_map = UndirectedGraph(graph)
-
-# pacman_map.locations = aux
-
-# node_colors = {node: 'white' for node in pacman_map.locations.keys()}
-# node_positions = pacman_map.locations
-# node_label_pos = {k: [v[0] - 0.25, v[1] - 0.4] for k, v in pacman_map.locations.items()}
-# edge_weights = {(k, k2): 1 for k, v in pacman_map.graph_dict.items() for k2, v2 in v.items()}
-
-# result_node_colors = all_node_colors[-1]
-
-# node_colors = {}
-# for k, v in result_node_colors.items():
-#     for ki, vi in aux.items():
-#         if aux[ki] == k:
-#             node_colors[ki] = v
-#             break
-
-# pacman_graph_data = {
-#     'graph_dict': pacman_map.graph_dict,
-#     'node_colors': node_colors,
-#     'node_positions': node_positions,
-#     'node_label_positions': node_label_pos,
-#     'edge_weights': edge_weights
-# }
-
-# show_map(pacman_graph_data)
 
 # display_visual(pacman_graph_data, True, best_first_graph_search_for_vis, PacmanProblem((1,1), (8,11)))
