@@ -3,7 +3,7 @@ from collections import deque
 from Problem import Node
 
 
-def tree_breadth_search_for_vis(problem):
+def tree_breadth_search_for_vis(problem, iterLim=100000):
     """Search through the successors of a problem to find a goal.
     The argument frontier should be an empty queue.
     Don't worry about repeated paths to a state. [Figure 3.7]"""
@@ -20,10 +20,11 @@ def tree_breadth_search_for_vis(problem):
     iterations += 1
     all_node_colors.append(dict(node_colors))
 
+    explored = []
     while frontier:
         # Popping first node of queue
         node = frontier.popleft()
-
+        explored.append(node.state)
         # modify the currently searching node to red
         node_colors[node.state] = "red"
         iterations += 1
@@ -36,12 +37,12 @@ def tree_breadth_search_for_vis(problem):
             all_node_colors.append(dict(node_colors))
             return (iterations, all_node_colors, node)
 
-        frontier.extend(node.expand(problem))
-
         for n in node.expand(problem):
-            node_colors[n.state] = "orange"
-            iterations += 1
-            all_node_colors.append(dict(node_colors))
+            if n.state not in explored and n not in frontier:
+                frontier.append(n)
+                node_colors[n.state] = "orange"
+                iterations += 1
+                all_node_colors.append(dict(node_colors))
 
         # modify the color of explored nodes to gray
         node_colors[node.state] = "gray"
@@ -57,7 +58,7 @@ def breadth_first_search(problem):
     return (iterations, all_node_colors, node)
 
 
-def tree_depth_search_for_vis(problem):
+def tree_depth_search_for_vis(problem, iterLim=100000):
     """Search through the successors of a problem to find a goal.
     The argument frontier should be an empty queue.
     Don't worry about repeated paths to a state. [Figure 3.7]"""
@@ -74,10 +75,12 @@ def tree_depth_search_for_vis(problem):
     iterations += 1
     all_node_colors.append(dict(node_colors))
 
-    while frontier:
+    explored = []
+    while len(frontier) > 0 and iterations < iterLim:
         # Popping first node of stack
         node = frontier.pop()
 
+        explored.append(node.state)
         # modify the currently searching node to red
         node_colors[node.state] = "red"
         iterations += 1
@@ -90,19 +93,20 @@ def tree_depth_search_for_vis(problem):
             all_node_colors.append(dict(node_colors))
             return (iterations, all_node_colors, node)
 
-        frontier.extend(node.expand(problem))
-
         for n in node.expand(problem):
-            node_colors[n.state] = "orange"
-            iterations += 1
-            all_node_colors.append(dict(node_colors))
+            if n.state not in explored and n not in frontier:
+                frontier.append(n)
+                node_colors[n.state] = "orange"
+                iterations += 1
+                all_node_colors.append(dict(node_colors))
+            
 
         # modify the color of explored nodes to gray
         node_colors[node.state] = "gray"
         iterations += 1
         all_node_colors.append(dict(node_colors))
 
-    return None
+    return (iterations, all_node_colors, node)
 
 
 def depth_first_search(problem):
