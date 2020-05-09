@@ -1,11 +1,13 @@
-import readMaze as rM
-from search import Node, Problem
-import math
 import functools
-from search import Node
-from best_first_graph_search_for_vis import best_first_graph_search_for_vis, astar_search_graph
-from notebook import show_map, display_visual
-from search import UndirectedGraph
+import math
+import time as time
+
+import readMaze as rM
+from Problem import Problem, UndirectedGraph
+from dfs_for_vis import depth_first_graph_search
+from informed_search import astar_search_graph, greedy_best_first_search, uniform_cost_search
+from uninformed_search import breadth_first_search
+
 
 class PacmanProblem(Problem):
     def __init__(self, initial, goal, maze=None):
@@ -177,7 +179,10 @@ class PacmanProblem(Problem):
 
 
 
-pacman_problem = PacmanProblem((1,1), (8,11))
+# ---------------------------------- PROBLEM INITIALIZATION -----------------------------------------------------
+# graph constuction defining the possible states + variable set for executing search algorithms
+
+pacman_problem = PacmanProblem((1, 1), (2, 6))
 
 reachable = pacman_problem.reachable_positions(pacman_problem.initial)
 
@@ -195,12 +200,80 @@ pacman_map.locations = aux
 
 node_colors = {node: 'white' for node in pacman_map.locations.keys()}
 node_positions = pacman_map.locations
-node_label_pos = { k:[v[0]-0.25, v[1]-0.4] for k,v in pacman_map.locations.items() }
-edge_weights = { (k,k2) : '' for k,v in pacman_map.graph_dict.items() for k2,v2 in v.items()}
+node_label_pos = {k: [v[0] - 0.25, v[1] - 0.4] for k, v in pacman_map.locations.items()}
+edge_weights = {(k, k2): 1 for k, v in pacman_map.graph_dict.items() for k2, v2 in v.items()}
 
+
+
+# print(pacman_problem.mazeX)
+# print(pacman_problem.manhattan((1, 8), (2, 12)))
+# a = pacman_problem.non_visited_reachable_positions((1, 4))
+# print(a)
+
+# ---------------------------------- METHOD CALLS -----------------------------------------------------
+# ----------------------------------      A*      -----------------------------------------------------
+
+start = time.time()
 iterations, all_node_colors, node = astar_search_graph(pacman_problem)
+end = time.time()
+print("time elapsed for astar_search_graph = " + str(end - start) + 's')
+print("iterations = " + str(iterations))
+
+
+# ----------------------------------  GREEDY_BEST_FIRST ------------------------------------------------
+
+start = time.time()
+iterations, all_node_colors, node = greedy_best_first_search(pacman_problem, pacman_problem.h)
+end = time.time()
+print("time elapsed for greedy_best_first_search = " + str(end - start) + 's')
+print("iterations = " + str(iterations))
+
+
+# ----------------------------------  UNIFORM_COST  -----------------------------------------------------
+
+start = time.time()
+iterations, all_node_colors, node = uniform_cost_search(pacman_problem)
+end = time.time()
+print("time elapsed for uniform_cost_search = "+ str(end - start) + 's')
+print("iterations = "+ str(iterations))
+
+
+# ----------------------------------  BREADTH_FIRST  ----------------------------------------------------------
+
+start = time.time()
+iterations, all_node_colors, node = breadth_first_search(pacman_problem)
+end = time.time()
+print("time elapsed for breadth_first_tree_search = "+ str(end - start) + 's')
+print("iterations = " + str(iterations))
+
+
+# ----------------------------------  RECURSIVE_BEST_FIRST  ------------------------------------------------
+
+# start = time.time()
+# iterations, all_node_colors, node = recursive_best_first_search_for_vis(pacman_problem)
+# end = time.time()
+# print("time elapsed for recursive_best_first_search_for_vis = "+ str(end - start) + 's')
+# print("iterations = "+ str(iterations))
+
+
+# ----------------------------------  DEPTH_FIRST  ----------------------------------------------------------
+
+start = time.time()
+iterations, all_node_colors, node = depth_first_graph_search(pacman_problem)
+end = time.time()
+print("time elapsed for depth_first_tree_search = " + str(end - start) + 's')
+print("iterations = " + str(iterations))
+
+# ----------------------------------  VISUAL_DISPLAY  ----------------------------------------------------------
 
 result_node_colors = all_node_colors[-1]
+
+node_colors = {}
+for k, v in result_node_colors.items():
+    for ki, vi in aux.items():
+        if aux[ki] == k:
+            node_colors[ki] = v
+            break
 
 pacman_graph_data = {
     'graph_dict': pacman_map.graph_dict,
@@ -210,7 +283,6 @@ pacman_graph_data = {
     'edge_weights': edge_weights
 }
 
-#show_map(pacman_graph_data)
+# show_map(pacman_graph_data)
 
-display_visual(pacman_graph_data, user_input=False, algorithm=astar_search_graph, problem=pacman_problem)
-
+# display_visual(pacman_graph_data, True, best_first_graph_search_for_vis, PacmanProblem((1,1), (8,11)))
