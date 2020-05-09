@@ -3,9 +3,11 @@ import math
 import time as time
 
 import readMaze as rM
-from Problem import Problem, UndirectedGraph
+from Problem import Problem, UndirectedGraph, show_map
 from dfs_for_vis import depth_first_graph_search
-from informed_search import astar_search_graph, greedy_best_first_search, uniform_cost_search
+from informed_search import astar_search_graph, greedy_best_first_search, uniform_cost_search, \
+    best_first_graph_search_for_vis
+from notebook import display_visual
 from uninformed_search import breadth_first_search
 
 
@@ -318,32 +320,32 @@ print("positions visited = " + str(len(set([x.state for x in node.path()]))))
 # for item in aux.keys():
 #     graph[item] = dict.fromkeys(pacman_problem.adjacent(aux[item]), 1)
 
-# pacman_map = UndirectedGraph(graph)
+pacman_map = UndirectedGraph(graph)
 
-# pacman_map.locations = aux
+pacman_map.locations = aux
 
-# node_colors = {node: 'white' for node in pacman_map.locations.keys()}
-# node_positions = pacman_map.locations
-# node_label_pos = {k: [v[0] - 0.25, v[1] - 0.4] for k, v in pacman_map.locations.items()}
-# edge_weights = {(k, k2): 1 for k, v in pacman_map.graph_dict.items() for k2, v2 in v.items()}
+node_colors = {node: 'white' for node in pacman_map.locations.keys()}
+node_positions = pacman_map.locations
+node_label_pos = {k: [v[0] - 0.25, v[1] - 0.4] for k, v in pacman_map.locations.items()}
+edge_weights = {(k, k2): 1 for k, v in pacman_map.graph_dict.items() for k2, v2 in v.items()}
 
-# result_node_colors = all_node_colors[-1]
+result_node_colors = all_node_colors[-1]
 
-# node_colors = {}
-# for k, v in result_node_colors.items():
-#     for ki, vi in aux.items():
-#         if aux[ki] == k:
-#             node_colors[ki] = v
-#             break
+node_colors = {}
+for k, v in result_node_colors.items():
+    for ki, vi in aux.items():
+        if aux[ki] == k:
+            node_colors[ki] = v
+            break
 
-# pacman_graph_data = {
-#     'graph_dict': pacman_map.graph_dict,
-#     'node_colors': node_colors,
-#     'node_positions': node_positions,
-#     'node_label_positions': node_label_pos,
-#     'edge_weights': edge_weights
-# }
+pacman_graph_data = {
+    'graph_dict': pacman_map.graph_dict,
+    'node_colors': node_colors,
+    'node_positions': node_positions,
+    'node_label_positions': node_label_pos,
+    'edge_weights': edge_weights
+}
 
-# show_map(pacman_graph_data)
+show_map(pacman_graph_data)
 
-# display_visual(pacman_graph_data, True, best_first_graph_search_for_vis, PacmanProblem((1,1), (8,11)))
+display_visual(pacman_graph_data, True, best_first_graph_search_for_vis, PacmanProblem((1,1), (8,11)))
