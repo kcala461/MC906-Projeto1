@@ -4,8 +4,6 @@ import numpy as np
 # 1 representa as paredes (nao podem ser atravessadas)
 # 2 representa as areas cinzas (o objetivo eh percorrer o maximo antes de chegar ao objetivo)
 # 3 representa os fantasmas
-# 4 representa a posicao inicial
-# 5 representa o objetivo
 
 # A organizacao do arquivo do labirinto deve ser: numLinhas numColunas coordenada00 coordenada01 ...
 def readMaze(filename="mazes/Maze1"):
