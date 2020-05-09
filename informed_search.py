@@ -91,16 +91,6 @@ def best_first_graph_search_for_vis(problem, f):
     return iterations, all_node_colors, node
 
 
-def greedy_best_first_search(problem, h=None):
-    """Greedy Best-first graph search is an informative searching algorithm with f(n) = h(n).
-    You need to specify the h function when you call best_first_search, or
-    else in your Problem subclass."""
-    if h == None:
-        h = problem.h2
-    iterations, all_node_colors, node = best_first_graph_search_for_vis(problem, lambda n: h(n))
-    return (iterations, all_node_colors, node)
-
-
 def uniform_cost_search(problem, display=False):
     iterations, all_node_colors, node = best_first_graph_search_for_vis(problem, lambda node: node.path_cost)
     return (iterations, all_node_colors, node)
