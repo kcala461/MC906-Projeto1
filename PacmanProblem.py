@@ -4,9 +4,11 @@ import time as time
 from notebook import show_map
 
 import readMaze as rM
-from Problem import Problem, UndirectedGraph
+from Problem import Problem, UndirectedGraph, show_map
 from dfs_for_vis import depth_first_graph_search
-from informed_search import astar_search_graph, greedy_best_first_search, uniform_cost_search
+from informed_search import astar_search_graph, greedy_best_first_search, uniform_cost_search, \
+    best_first_graph_search_for_vis
+from notebook import display_visual
 from uninformed_search import breadth_first_search
 
 
@@ -497,17 +499,24 @@ print("time elapsed for problem3 depth_first_tree_search = " + str(end - start) 
 print("iterations = " + str(iterations))
 print("positions visited = " + str(len(set([x.state for x in node.path()]))))
 
-result_node_colors = all_node_colors[-1]
-pacman_graph_data = {
-    'graph_dict': pacman_map3.graph_dict,
-    'node_colors': result_node_colors,
-    'node_positions': node_positions3,
-    'node_label_positions': node_label_pos3,
-    'edge_weights': edge_weights3
- }
-show_map(pacman_graph_data)
+# result_node_colors = all_node_colors[-1]
+# pacman_graph_data = {
+#     'graph_dict': pacman_map3.graph_dict,
+#     'node_colors': result_node_colors,
+#     'node_positions': node_positions3,
+#     'node_label_positions': node_label_pos3,
+#     'edge_weights': edge_weights3
+#  }
+# show_map(pacman_graph_data)
 
 # ----------------------------------  VISUAL_DISPLAY  ----------------------------------------------------------
 
+pacman_graph_data = {
+    'graph_dict': pacman_map1.graph_dict,
+    'node_colors': node_colors1,
+    'node_positions': node_positions1,
+    'node_label_positions': node_label_pos1,
+    'edge_weights': edge_weights1
+ }
 
-# display_visual(pacman_graph_data, True, best_first_graph_search_for_vis, PacmanProblem((1,1), (8,11)))
+#display_visual(pacman_graph_data, True, best_first_graph_search_for_vis, PacmanProblem((1,1), (8,11)))
